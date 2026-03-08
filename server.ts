@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { identifyContact } from './lib/actions';
 
 console.log("Starting server");
 
@@ -7,33 +8,22 @@ const port = 3000;
 
 app.use(express.json());
 
-app.post('/identify', (req: Request, res: Response) => {
-    try{
-
-        console.log("req is ",req);
-        
-        const requestBody=req.body
-        console.log("req is ",requestBody);
-        
+app.post('/identify', async (req: Request, res: Response) => {
+    try {
         const { email, phoneNumber } = req.body;
         
-        if (!email && !phoneNumber) {
-            return res.status(400).json({ error: 'Either email or phoneNumber must be provided.' });
+        const result = await identifyContact(email, phoneNumber);
+        return res.status(200).json(result);
+
+    } catch (err: any) {
+        console.error("Error occurred resolving identify endpoint:", err);
+        if (err.message === 'Either email or phoneNumber must be provided.') {
+            return res.status(400).json({ error: err.message });
         }
-        
-        // Rest of your logic will go here
-        console.log("Email recied is",email, "\tphoneNumber ",phoneNumber );
-        
-        
-        res.status(200).json({ message: 'Identify endpoint called successfully.' });
-    }
-    catch(err){
-        console.log("Error ocuured",err);
-        
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
-
