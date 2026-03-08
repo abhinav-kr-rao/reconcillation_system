@@ -4,7 +4,7 @@
     "module": "commonjs",   
     "moduleResolution": "node",                             
     "rootDir": "./",                                     
-    "outDir": "./dist",                                  
+    "outDir": "dist1",                                  
     "esModuleInterop": true,                             
     "forceConsistentCasingInFileNames": true,            
     "strict": true,                                      
@@ -15,6 +15,6 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist1"
   ]
 }
